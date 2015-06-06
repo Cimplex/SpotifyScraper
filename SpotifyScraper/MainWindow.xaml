@@ -1,0 +1,25 @@
+﻿<Window x:Class="SpotifyScraper.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SpotifyScraper"
+        mc:Ignorable="d"
+        ResizeMode="CanMinimize"
+        Title="Spotify Scraper" Height="154" Width="468">
+    <Grid>
+        <ComboBox x:Name="comboProcesses" HorizontalAlignment="Left" Margin="94,10,0,0" VerticalAlignment="Top" Width="269"/>
+
+        <TextBlock x:Name="textSelectProcess" HorizontalAlignment="Left" Margin="12,16,0,0" TextWrapping="Wrap" Text="Select Process:" VerticalAlignment="Top"/>
+        <TextBlock x:Name="textOutput" HorizontalAlignment="Left" Margin="49,43,0,0" TextWrapping="Wrap" Text="Output:" VerticalAlignment="Top"/>
+        <TextBox x:Name="textBoxDirectory" HorizontalAlignment="Left" FontSize="11" Height="23" Margin="94,39,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="269" IsReadOnly="True"/>
+
+
+        <Button x:Name="buttonBrowse" Content="Browse ..." HorizontalAlignment="Left" Margin="368,39,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="buttonBrowse_Click"/>
+        <Button x:Name="buttonStart" Content="Start" FontSize="18" FontWeight="Bold" HorizontalAlignment="Left" Margin="319,67,0,0" VerticalAlignment="Top" Width="124" Height="41" Click="buttonStart_Click"/>
+        <Button x:Name="buttonRefresh" Content="Refresh" HorizontalAlignment="Left" Margin="368,10,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="buttonRefresh_Click"/>
+        <TextBox x:Name="textBoxNotPlaying" Text="Waiting for Song - Spotify" HorizontalAlignment="Left" FontSize="11" Height="23" Margin="12,85,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="302"/>
+        <TextBlock x:Name="textNotPlaying" HorizontalAlignment="Left" Margin="12,64,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="302"><Run Text="Text when not playing a song:"/></TextBlock>
+
+    </Grid>
+</Window>
