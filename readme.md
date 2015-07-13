@@ -1,11 +1,12 @@
 
-Spotify Scraper - Pre-Release
-=============================
+Pre-Release Software Below
+==========================
+
+![](http://i.imgur.com/f6rh4XU.png =600x)
 
 
 
-Introduction
-------------
+![](http://i.imgur.com/4WppmPu.png)
 
 This project was partly created because of SMG going to a premium paid model, but more significantly, this was created for people that just want to scrape song and artist titles from Spotify.
 
@@ -13,17 +14,16 @@ Recently (Version 1.0.5, released on May 19, 2015), Spotify added the functional
 
 
 
-Features
---------
+![](http://i.imgur.com/DeOaNN7.png)
 
 * Scrapes the "Song Title - Artist" from Spotify
 * Change what text shown when nothing is playing
+* Allow extra spaces for scrolling text
 * English support only
 
 
 
-Future Features
----------------
+![](http://i.imgur.com/HkDWaoO.png)
 
 * The ability to create a white list of weird titled songs and rename them dynamically
 * Simple RegEx support for advanced users
@@ -32,15 +32,13 @@ Future Features
 
 
 
-Support
--------
+![](http://i.imgur.com/chpQBJv.png)
 
 For the a while, I see myself working on this project until I get it a little bit more flexible and feature complete. This means I will be monitoring this project for any issues that people report. I will be advertising this project more in the future, since it is only in alpha right now. Don't let this deter you if you really need a program to scrape spotify! It is fully working.
 
 
 
-Comments or Donations
----------------------
+![](http://i.imgur.com/o0veEgV.png)
 
 I am looking for any comments or criticism. Feel free to open an issue or tweet me! (@_dandruff)
 
