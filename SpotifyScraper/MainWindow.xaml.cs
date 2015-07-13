@@ -20,145 +20,157 @@ using System.IO;
 
 namespace SpotifyScraper
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
-    {
-        private DispatcherTimer timer;
+	/// <summary>
+	/// Interaction logic for MainWindow.xaml
+	/// </summary>
+	public partial class MainWindow : Window
+	{
+		private DispatcherTimer timer;
 
-        private String lastParse;
+		private String lastParse;
 
-        public MainWindow()
-        {
-            InitializeComponent();
+		private Config Config;
 
-            this.Loaded += MainWindow_Loaded;
+		public MainWindow( )
+		{
+			InitializeComponent( );
 
-            this.timer = new DispatcherTimer()
-            {
-                Interval = TimeSpan.FromMilliseconds(100),
-            };
+			// Load our config or create a new one
+			Config = Config.Load( );
+			if ( Config == null )
+			{
+				Config = new Config( );
+				Config.Save( );
+			}
 
-            this.timer.Tick += Timer_Tick;
-        }
+			this.Loaded += MainWindow_Loaded;
 
-        private void RefreshProcessList()
-        {
-            // Clear out the UI
-            comboProcesses.Items.Clear();
+			this.timer = new DispatcherTimer( )
+			{
+				Interval = TimeSpan.FromMilliseconds( 100 ),
+			};
 
-            // Get all the processes and sort them
-            List<Process> procressList = new List<Process>(Process.GetProcesses());
-            procressList.Sort((Process a, Process b) => { return a.ProcessName.CompareTo(b.ProcessName); });
+			this.timer.Tick += Timer_Tick;
+		}
 
-            // List the processes in the UI
-            foreach (Process p in procressList)
-                if (p.MainWindowTitle != "" && p.MainWindowTitle != "Spotify Scraper")
-                {
-                    comboProcesses.Items.Add(
-                        new ComboBoxItem()
-                        {
-                            Content = p.ProcessName + ".exe - Preview: '" + p.MainWindowTitle + "'",
-                            Tag = p.Id
-                        });
+		private void RefreshProcessList( )
+		{
+			// Clear out the UI
+			comboProcesses.Items.Clear( );
 
-                    // Select the last one that looks like spotify
-                    if (p.ProcessName == "Spotify")
-                        comboProcesses.SelectedIndex = comboProcesses.Items.Count - 1;
-                }
-        }
+			// Get all the processes and sort them
+			List<Process> procressList = new List<Process>( Process.GetProcesses( ) );
+			procressList.Sort( ( Process a, Process b ) => { return a.ProcessName.CompareTo( b.ProcessName ); } );
 
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            RefreshProcessList();
+			// List the processes in the UI
+			foreach ( Process p in procressList )
+				if ( p.MainWindowTitle != "" && p.MainWindowTitle != "Spotify Scraper" )
+				{
+					comboProcesses.Items.Add(
+						new ComboBoxItem( )
+						{
+							Content = p.ProcessName + ".exe - Preview: '" + p.MainWindowTitle + "'",
+							Tag = p.Id
+						} );
 
-            // TODO: Make a config file somewhere
-            textBoxDirectory.Text = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\NowPlaying-Spotify.txt";
-        }
+					// Select the last one that looks like spotify
+					if ( p.ProcessName == "Spotify" )
+						comboProcesses.SelectedIndex = comboProcesses.Items.Count - 1;
+				}
+		}
 
-        private void buttonRefresh_Click(object sender, RoutedEventArgs e)
-        {
-            RefreshProcessList();
-        }
+		private void MainWindow_Loaded( object sender, RoutedEventArgs e )
+		{
+			RefreshProcessList( );
+			textBoxDirectory.Text = Config.NowPlayingPath;
+		}
 
-        private void buttonBrowse_Click(object sender, RoutedEventArgs e)
-        {
-            SaveFileDialog saveFileDialog1 = new SaveFileDialog()
-            {
-                Filter = "Text File|*.txt",
-                Title = "Choose or Create a Text File",
-                FileName = "NowPlaying-Spotify.txt",
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-            };
+		private void buttonRefresh_Click( object sender, RoutedEventArgs e )
+		{
+			RefreshProcessList( );
+		}
 
-            bool? result = saveFileDialog1.ShowDialog();
-            if (result.HasValue & result.Value)
-                textBoxDirectory.Text = saveFileDialog1.FileName;
-        }
+		private void buttonBrowse_Click( object sender, RoutedEventArgs e )
+		{
+			SaveFileDialog saveFileDialog1 = new SaveFileDialog( )
+			{
+				Filter = "Text File|*.txt",
+				Title = "Choose or Create a Text File",
+				FileName = "NowPlaying-Spotify.txt",
+				InitialDirectory = Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments ),
+			};
 
-        private void buttonStart_Click(object sender, RoutedEventArgs e)
-        {
-            if (buttonStart.Content.ToString() == "Start")
-            {
-                buttonStart.Content = "Stop";
-                timer.Start();
+			bool? result = saveFileDialog1.ShowDialog( );
+			if ( result.HasValue & result.Value )
+			{
+				textBoxDirectory.Text = saveFileDialog1.FileName;
+				Config.NowPlayingPath = saveFileDialog1.FileName;
+				Config.Save( );
+			}
+		}
 
-                // Disable UI Elements
-                comboProcesses.IsEnabled = false;
-                buttonRefresh.IsEnabled = false;
-                buttonBrowse.IsEnabled = false;
-                textBoxNotPlaying.IsEnabled = false;
-            }
-            else
-            {
-                buttonStart.Content = "Start";
-                timer.Stop();
+		private void buttonStart_Click( object sender, RoutedEventArgs e )
+		{
+			if ( buttonStart.Content.ToString( ) == "Start" )
+			{
+				buttonStart.Content = "Stop";
+				timer.Start( );
 
-                // Enable UI Elements
-                comboProcesses.IsEnabled = true;
-                buttonRefresh.IsEnabled = true;
-                buttonBrowse.IsEnabled = true;
-                textBoxNotPlaying.IsEnabled = true;
-            }
-        }
+				// Disable UI Elements
+				comboProcesses.IsEnabled = false;
+				buttonRefresh.IsEnabled = false;
+				buttonBrowse.IsEnabled = false;
+				textBoxNotPlaying.IsEnabled = false;
+			}
+			else
+			{
+				buttonStart.Content = "Start";
+				timer.Stop( );
 
-        private void Timer_Tick(object sender, EventArgs e)
-        {
-            ComboBoxItem selectedItem = comboProcesses.SelectedItem as ComboBoxItem;
-            if (selectedItem == null)
-            {
-                // TODO: Report no process selected.
-                return;
-            }
+				// Enable UI Elements
+				comboProcesses.IsEnabled = true;
+				buttonRefresh.IsEnabled = true;
+				buttonBrowse.IsEnabled = true;
+				textBoxNotPlaying.IsEnabled = true;
+			}
+		}
 
-            Process process = Process.GetProcessById((int)selectedItem.Tag);
-            if (process == null)
-            {
-                // TODO: Report no process found, select a different process.
-                return;
-            }
+		private void Timer_Tick( object sender, EventArgs e )
+		{
+			ComboBoxItem selectedItem = comboProcesses.SelectedItem as ComboBoxItem;
+			if ( selectedItem == null )
+			{
+				// TODO: Report no process selected.
+				return;
+			}
 
-            string title = process.MainWindowTitle;
-            if (title == null)
-            {
-                // TODO: Report null title.
-                return;
-            }
+			Process process = Process.GetProcessById( (int) selectedItem.Tag );
+			if ( process == null )
+			{
+				// TODO: Report no process found, select a different process.
+				return;
+			}
 
-            if (lastParse == title)
-            {
-                // TODO: Verbose, report unchanged title. 
-                return;
-            }
-            lastParse = title;
+			string title = process.MainWindowTitle;
+			if ( title == null )
+			{
+				// TODO: Report null title.
+				return;
+			}
 
-            // If spotify is not playing anything, replace it with user text
-            if (title == "Spotify")
-                title = textBoxNotPlaying.Text;
+			if ( lastParse == title )
+			{
+				// TODO: Verbose, report unchanged title. 
+				return;
+			}
+			lastParse = title;
 
-            // Write the title to the file;
-            File.WriteAllText(textBoxDirectory.Text, title);
-        }
-    }
+			// If spotify is not playing anything, replace it with user text
+			if ( title == "Spotify" )
+				title = textBoxNotPlaying.Text;
+
+			// Write the title to the file;
+			File.WriteAllText( textBoxDirectory.Text, title );
+		}
+	}
 }
