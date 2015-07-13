@@ -21,6 +21,20 @@ namespace SpotifyScraper
 			set;
 		}
 
+		[DataMember]
+		public Boolean ScrollingSpaces
+		{
+			get;
+			set;
+		}
+
+		[DataMember]
+		public UInt32 NumberOfSpaces
+		{
+			get;
+			set;
+		}
+
 		public static String ConfigDirectory
 		{
 			get { return Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData ) + "\\SpotifyScraper"; }
@@ -38,6 +52,8 @@ namespace SpotifyScraper
 		{
 			// Default Values
 			NowPlayingPath = Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments ) + "\\NowPlaying-Spotify.txt";
+			ScrollingSpaces = false;
+			NumberOfSpaces = 10;
 		}
 
 		public void Save( )

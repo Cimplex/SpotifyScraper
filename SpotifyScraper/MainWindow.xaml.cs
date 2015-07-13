@@ -83,6 +83,8 @@ namespace SpotifyScraper
 		{
 			RefreshProcessList( );
 			textBoxDirectory.Text = Config.NowPlayingPath;
+			checkScrollingSpaces.IsChecked = Config.ScrollingSpaces;
+			textNumberOfSpaces.Text = Config.NumberOfSpaces.ToString( );
 		}
 
 		private void buttonRefresh_Click( object sender, RoutedEventArgs e )
@@ -121,6 +123,10 @@ namespace SpotifyScraper
 				buttonRefresh.IsEnabled = false;
 				buttonBrowse.IsEnabled = false;
 				textBoxNotPlaying.IsEnabled = false;
+				checkScrollingSpaces.IsEnabled = false;
+				textNumberOfSpaces.IsEnabled = false;
+
+				lastParse = "";
 			}
 			else
 			{
@@ -132,6 +138,8 @@ namespace SpotifyScraper
 				buttonRefresh.IsEnabled = true;
 				buttonBrowse.IsEnabled = true;
 				textBoxNotPlaying.IsEnabled = true;
+				checkScrollingSpaces.IsEnabled = true;
+				textNumberOfSpaces.IsEnabled = checkScrollingSpaces.IsChecked.Value;
 			}
 		}
 
@@ -169,8 +177,32 @@ namespace SpotifyScraper
 			if ( title == "Spotify" )
 				title = textBoxNotPlaying.Text;
 
+			title += new String( ' ', Config.ScrollingSpaces ? (int)Config.NumberOfSpaces : 0 );
+
 			// Write the title to the file;
-			File.WriteAllText( textBoxDirectory.Text, title );
+			File.WriteAllText( Config.NowPlayingPath, title );
+		}
+
+		private void textNumberOfSpaces_TextChanged( object sender, TextChangedEventArgs e )
+		{
+			try
+			{
+				Config.NumberOfSpaces = Convert.ToUInt32( textNumberOfSpaces.Text );
+				Config.Save( );
+			}
+			catch { }
+		}
+
+		private void textNumberOfSpaces_LostFocus( object sender, RoutedEventArgs e )
+		{
+			textNumberOfSpaces.Text = Config.NumberOfSpaces.ToString( );
+		}
+
+		private void checkScrollingSpaces_CheckChanged( object sender, RoutedEventArgs e )
+		{
+			textNumberOfSpaces.IsEnabled = checkScrollingSpaces.IsChecked.Value;
+			Config.ScrollingSpaces = checkScrollingSpaces.IsChecked.Value;
+			Config.Save( );
 		}
 	}
 }
