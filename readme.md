@@ -10,7 +10,7 @@ This project was partly created because of SMG going to a premium paid model, bu
 
 Recently (Version 1.0.5, released on May 19, 2015), Spotify added the functionality to show the "Song Title - Artist" in the title of its window. This addition is what made this program easy to create.
 
-[Download the Latest Alpha](https://dl.dropboxusercontent.com/u/8093066/SpotifyScraper/SpotifyScraper-Alpha3.zip)
+[Download the Latest Alpha](https://dl.dropboxusercontent.com/u/8093066/SpotifyScraper/SpotifyScraper-Alpha4.zip)
 
 ![](http://i.imgur.com/f6rh4XU.png =600x)
 
