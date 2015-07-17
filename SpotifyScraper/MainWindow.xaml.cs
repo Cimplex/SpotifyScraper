@@ -152,7 +152,13 @@ namespace SpotifyScraper
 				return;
 			}
 
-			Process process = Process.GetProcessById( (int) selectedItem.Tag );
+			Process process = null;
+			try
+			{
+				 process = Process.GetProcessById( (int) selectedItem.Tag );
+			}
+			catch { }
+
 			if ( process == null )
 			{
 				// TODO: Report no process found, select a different process.
